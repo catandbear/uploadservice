@@ -5,6 +5,23 @@
 
 <mapper namespace="com.fsd2020.data.mapper.PriceMapper">
 
-
+	<!--  -->
+	<insert id="insertPrice">
+		insert into 
+			stock_price_detail (
+					company_code, 
+					stock_exchange, 
+					price,
+					price_min) 
+			VALUES 
+			<foreach collection="prices" item="price" separator=",">
+				(
+					#{price.code}, 
+					#{price.stockExchange}, 
+					#{price.price},
+					#{price.date} )
+			</foreach>
+	</insert>
+	
 	
 </mapper>
