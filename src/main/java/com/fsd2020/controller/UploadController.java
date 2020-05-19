@@ -10,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,4 +65,11 @@ public class UploadController {
 		
 	}
 	
+	@GetMapping("get")
+	public int[] testEchart() {
+		System.out.println("change start");
+		
+		int[] newint = {932, 932, 1290, 123, 1290, 456, 789};
+		return newint;
+	}
 }
