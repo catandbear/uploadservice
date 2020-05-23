@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fsd2020.data.entity.UploadReturn;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -32,7 +33,7 @@ public class UploadController {
 	}
 	
 	@PostMapping("upload")
-	public List<PriceInfoEntity> importEmp(@RequestParam("file") MultipartFile file) throws IOException {
+	public UploadReturn importEmp(@RequestParam("file") MultipartFile file) throws IOException {
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
@@ -44,7 +45,6 @@ public class UploadController {
 			
 			XSSFRow row = sheet.getRow(i);
 			PriceInfoEntity priceInfo = new PriceInfoEntity(
-					
 					// company code
 					row.getCell(0).getStringCellValue().trim(), 
 					row.getCell(1).getStringCellValue().trim(), 
@@ -53,16 +53,22 @@ public class UploadController {
 			System.out.println(priceInfo.toString());
 			priceInfoList.add(priceInfo);
 		}
-		
+
 		// start business
 		mapper.insertPrice(priceInfoList);
 		System.out.println("insert done");
-		
 		workbook.close();
-		
-		
-		return priceInfoList;
-		
+
+		// for return
+		String com_num = priceInfoList.get(0).getCode();
+		String stock_exchange = priceInfoList.get(0).getStockExchange();
+		int record_num = priceInfoList.size();
+		String start_time = priceInfoList.get(0).getDate();
+		String end_time = priceInfoList.get(priceInfoList.size()-1).getDate();
+
+		UploadReturn uploadReturn = new UploadReturn(com_num, stock_exchange, record_num, start_time, end_time);
+		System.out.println("uploadReturn : " + uploadReturn.toString());
+		return uploadReturn;
 	}
 	
 	@GetMapping("get")
